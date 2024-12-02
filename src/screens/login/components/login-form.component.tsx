@@ -79,6 +79,14 @@ const LoginScreen = () => {
       {errors.password && <Text style={styles.errorText}>{errors.password.message}</Text>}
 
       <Button
+        mode="text"
+        loading={loading}
+        onPress={() => navigation.navigate('Login')}
+        disabled={loading}>
+        ¿No tienes una cuenta? Registrate aquí
+      </Button>
+
+      <Button
         mode="contained"
         style={styles.button}
         loading={loading}
@@ -96,7 +104,7 @@ const LoginScreen = () => {
 export default LoginScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, justifyContent: 'center' },
+  container: { flex: 1, padding: 16, justifyContent: 'center', zIndex: 3 },
   title: { fontSize: 24, marginBottom: 16, textAlign: 'center' },
   input: { marginBottom: 8 },
   button: { marginTop: 16 },

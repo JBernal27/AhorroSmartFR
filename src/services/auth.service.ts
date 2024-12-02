@@ -46,7 +46,9 @@ export class AuthService {
 
   static async register(newUser: IUser): Promise<ISettings> {
     try {
-      const response = await AxiosInstance.post('/users', newUser);
+      console.log(newUser);
+      
+      const response = await AxiosInstance.post('/auth/register', newUser);
       console.log(response);
 
       const {email, password} = newUser;
