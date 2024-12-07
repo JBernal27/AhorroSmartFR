@@ -50,7 +50,7 @@ export const themeColors = {
     onDarkContainer: 'rgb(0, 29, 51)',
   },
   dark: {
-    primary: 'rgb(85, 219, 199)',
+    primary: 'rgb(0, 107, 94)',
     onPrimary: 'rgb(0, 55, 48)',
     primaryContainer: 'rgb(0, 80, 71)',
     onPrimaryContainer: 'rgb(117, 248, 226)',

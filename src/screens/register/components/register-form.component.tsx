@@ -11,6 +11,7 @@ interface RegisterFormData {
   name: string;
   email: string;
   password: string;
+  confirmPassword: string;
 }
 
 const RegisterForm = () => {
@@ -20,6 +21,7 @@ const RegisterForm = () => {
     control,
     handleSubmit,
     formState: {errors},
+    watch,
   } = useForm<RegisterFormData>();
   const {register, loading, error} = useRegister();
 
@@ -29,38 +31,34 @@ const RegisterForm = () => {
       data.email,
       data.password,
     );
-    console.log('adsas', isRegisterSuccessful);
     if (isRegisterSuccessful) {
       navigation.navigate('Home');
     }
   };
 
+  const password = watch('password'); // Para comparar con confirmPassword
+
   return (
     <View style={styles.container}>
       <Title style={[styles.title, {color: theme.colors.primary}]}>
-        Registrate
+        Regístrate
       </Title>
 
       <Controller
         control={control}
         name="name"
-        rules={{
-          required: 'El nombre es requerido',
-        }}
+        rules={{required: 'El nombre es requerido'}}
         render={({field: {onChange, onBlur, value}}) => (
           <TextInput
             label="Nombre"
             mode="outlined"
             style={styles.input}
-            keyboardType="email-address"
-            activeOutlineColor={theme.colors.primary}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
             error={!!errors.name}
           />
         )}
-        defaultValue={''}
       />
       {errors.name && (
         <Text style={styles.errorText}>{errors.name.message}</Text>
@@ -70,7 +68,7 @@ const RegisterForm = () => {
         control={control}
         name="email"
         rules={{
-          required: 'el correo es requerido',
+          required: 'El correo es requerido',
           pattern: {
             value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
             message: 'Email inválido',
@@ -81,15 +79,12 @@ const RegisterForm = () => {
             label="Correo"
             mode="outlined"
             style={styles.input}
-            keyboardType="email-address"
-            activeOutlineColor={theme.colors.primary}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
             error={!!errors.email}
           />
         )}
-        defaultValue={''}
       />
       {errors.email && (
         <Text style={styles.errorText}>{errors.email.message}</Text>
@@ -98,33 +93,55 @@ const RegisterForm = () => {
       <Controller
         control={control}
         name="password"
-        rules={{required: 'La contraseña es requerida'}}
+        rules={{
+          required: 'La contraseña es requerida',
+          pattern: {
+            value: /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{6,})/,
+            message:
+              'La contraseña debe tener al menos 6 caracteres, una mayúscula y un carácter especial',
+          },
+        }}
         render={({field: {onChange, onBlur, value}}) => (
           <TextInput
             label="Contraseña"
             mode="outlined"
             style={styles.input}
             secureTextEntry
-            activeOutlineColor={theme.colors.primary}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
             error={!!errors.password}
           />
         )}
-        defaultValue={''}
       />
       {errors.password && (
         <Text style={styles.errorText}>{errors.password.message}</Text>
       )}
 
-      <Button
-        mode="text"
-        loading={loading}
-        onPress={() => navigation.navigate('Login')}
-        disabled={loading}>
-        ¿Ya tienes una cuenta? Inicia Sesión aquí
-      </Button>
+      <Controller
+        control={control}
+        name="confirmPassword"
+        rules={{
+          required: 'Debes confirmar la contraseña',
+          validate: value =>
+            value === password || 'Las contraseñas no coinciden',
+        }}
+        render={({field: {onChange, onBlur, value}}) => (
+          <TextInput
+            label="Confirmar Contraseña"
+            mode="outlined"
+            style={styles.input}
+            secureTextEntry
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            error={!!errors.confirmPassword}
+          />
+        )}
+      />
+      {errors.confirmPassword && (
+        <Text style={styles.errorText}>{errors.confirmPassword.message}</Text>
+      )}
 
       <Button
         mode="contained"

@@ -19,6 +19,7 @@ export class AuthService {
         isFirstTime: false,
         token: '',
         password: '',
+        theme: 'system',
       };
 
       await SettingsService.resetSettings(defaultSettings);
@@ -104,7 +105,7 @@ export class AuthService {
       if (!id) {
         throw new Error('ID de usuario no encontrado en la configuración.');
       }
-      const response = await AxiosInstance.put(`/users/${id}`, updatedUserData);
+      const response = await AxiosInstance.patch(`/users/${id}`, updatedUserData);
       return response.data;
     } catch (error) {
       console.error('Error al actualizar usuario en el backend:', error);

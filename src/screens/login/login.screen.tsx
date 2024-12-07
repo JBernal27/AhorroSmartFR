@@ -4,8 +4,11 @@ import { useTheme } from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import { styles } from './styles/login.styles';
 import LoginForm from './components/login-form.component';
+import { usePreventRemove } from '@react-navigation/native';
 
 const LoginScreen = () => {
+
+  usePreventRemove(true, () => {});
 
   return (
     <SafeAreaView style={styles.container}>

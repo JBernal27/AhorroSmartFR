@@ -81,7 +81,7 @@ const LoginScreen = () => {
       <Button
         mode="text"
         loading={loading}
-        onPress={() => navigation.navigate('Login')}
+        onPress={() => navigation.navigate('Register')}
         disabled={loading}>
         ¿No tienes una cuenta? Registrate aquí
       </Button>
@@ -105,7 +105,7 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, justifyContent: 'center', zIndex: 3 },
-  title: { fontSize: 24, marginBottom: 16, textAlign: 'center' },
+  title: { fontSize: 24, marginBottom: 16, textAlign: 'center', fontWeight: 'bold' },
   input: { marginBottom: 8 },
   button: { marginTop: 16 },
   errorText: { color: 'red', marginTop: 8 },
