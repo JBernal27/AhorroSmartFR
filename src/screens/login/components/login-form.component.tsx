@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { TextInput, Button, Title, Text, useTheme } from 'react-native-paper';
+import { TextInput, Button, Text, useTheme } from 'react-native-paper';
 import { useForm, Controller } from 'react-hook-form';
 import { RootStackParamList } from '../../../router/navigation';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
@@ -26,9 +26,9 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Title style={[styles.title, { color: theme.colors.primary }]}>
+      <Text variant='displaySmall' style={[styles.title, { color: theme.colors.onPrimary }]}>
         Iniciar Sesión
-      </Title>
+      </Text>
 
       <Controller
         control={control}
@@ -43,7 +43,7 @@ const LoginScreen = () => {
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
             label="Email"
-            mode="outlined"
+            mode="flat"
             style={styles.input}
             keyboardType="email-address"
             activeOutlineColor={theme.colors.primary}
@@ -64,7 +64,7 @@ const LoginScreen = () => {
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
             label="Password"
-            mode="outlined"
+            mode="flat"
             style={styles.input}
             secureTextEntry
             activeOutlineColor={theme.colors.primary}
@@ -105,7 +105,7 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, justifyContent: 'center', zIndex: 3 },
-  title: { fontSize: 24, marginBottom: 16, textAlign: 'center', fontWeight: 'bold' },
+  title: { marginBottom: 16, textAlign: 'center', fontWeight: '900' },
   input: { marginBottom: 8 },
   button: { marginTop: 16 },
   errorText: { color: 'red', marginTop: 8 },

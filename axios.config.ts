@@ -21,7 +21,7 @@ AxiosInstance.interceptors.request.use(
 
 AxiosInstance.interceptors.response.use(
   (response) => {
-    console.warn('RESPONSE');
+    console.log('RESPONSE');
     console.log(JSON.stringify(response.data, null, 2));
     return response;
   },

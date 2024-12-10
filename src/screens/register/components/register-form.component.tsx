@@ -1,6 +1,13 @@
 import React from 'react';
 import {View} from 'react-native';
-import {TextInput, Button, Title, Text, useTheme} from 'react-native-paper';
+import {
+  TextInput,
+  Button,
+  Title,
+  Text,
+  useTheme,
+  HelperText,
+} from 'react-native-paper';
 import {useForm, Controller} from 'react-hook-form';
 import {RootStackParamList} from '../../../router/navigation';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
@@ -40,9 +47,11 @@ const RegisterForm = () => {
 
   return (
     <View style={styles.container}>
-      <Title style={[styles.title, {color: theme.colors.primary}]}>
+      <Text
+        variant="displaySmall"
+        style={[styles.title, {color: theme.colors.onPrimary}]}>
         Regístrate
-      </Title>
+      </Text>
 
       <Controller
         control={control}
@@ -51,7 +60,7 @@ const RegisterForm = () => {
         render={({field: {onChange, onBlur, value}}) => (
           <TextInput
             label="Nombre"
-            mode="outlined"
+            mode="flat"
             style={styles.input}
             onBlur={onBlur}
             onChangeText={onChange}
@@ -61,7 +70,7 @@ const RegisterForm = () => {
         )}
       />
       {errors.name && (
-        <Text style={styles.errorText}>{errors.name.message}</Text>
+        <HelperText type="error">{errors.name.message}</HelperText>
       )}
 
       <Controller
@@ -77,7 +86,7 @@ const RegisterForm = () => {
         render={({field: {onChange, onBlur, value}}) => (
           <TextInput
             label="Correo"
-            mode="outlined"
+            mode="flat"
             style={styles.input}
             onBlur={onBlur}
             onChangeText={onChange}
@@ -87,7 +96,7 @@ const RegisterForm = () => {
         )}
       />
       {errors.email && (
-        <Text style={styles.errorText}>{errors.email.message}</Text>
+        <HelperText type="error">{errors.email.message}</HelperText>
       )}
 
       <Controller
@@ -104,7 +113,7 @@ const RegisterForm = () => {
         render={({field: {onChange, onBlur, value}}) => (
           <TextInput
             label="Contraseña"
-            mode="outlined"
+            mode="flat"
             style={styles.input}
             secureTextEntry
             onBlur={onBlur}
@@ -115,7 +124,7 @@ const RegisterForm = () => {
         )}
       />
       {errors.password && (
-        <Text style={styles.errorText}>{errors.password.message}</Text>
+        <HelperText type="error">{errors.password.message}</HelperText>
       )}
 
       <Controller
@@ -129,7 +138,7 @@ const RegisterForm = () => {
         render={({field: {onChange, onBlur, value}}) => (
           <TextInput
             label="Confirmar Contraseña"
-            mode="outlined"
+            mode="flat"
             style={styles.input}
             secureTextEntry
             onBlur={onBlur}
@@ -140,8 +149,16 @@ const RegisterForm = () => {
         )}
       />
       {errors.confirmPassword && (
-        <Text style={styles.errorText}>{errors.confirmPassword.message}</Text>
+        <HelperText type="error">{errors.confirmPassword.message}</HelperText>
       )}
+
+      <Button
+        mode="text"
+        loading={loading}
+        onPress={() => navigation.navigate('Login')}
+        disabled={loading}>
+        ¿Ya tienes una cuenta? Inicia sesión aquí
+      </Button>
 
       <Button
         mode="contained"
@@ -152,7 +169,7 @@ const RegisterForm = () => {
         Registrarme
       </Button>
 
-      {error && <Text style={styles.errorText}>{error}</Text>}
+      {error && <HelperText type="error">{error}</HelperText>}
     </View>
   );
 };

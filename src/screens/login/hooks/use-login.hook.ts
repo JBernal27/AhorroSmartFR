@@ -15,7 +15,7 @@ const useLogin = () => {
       const isLoginSuccessful = await AuthService.login(email, password);
       if (isLoginSuccessful) {
         console.log('Is login successful:', isLoginSuccessful);
-        context?.setSettings(isLoginSuccessful);
+        context?.setSettings({...isLoginSuccessful, theme: 'system'});
         context?.setSnackbarInfo({
           message: 'Inicio de sesión exitoso.',
           type: 'success',
@@ -28,14 +28,16 @@ const useLogin = () => {
         if (err.response?.status === 404) {
           setError('Credenciales incorrectas. Por favor, intenta de nuevo.');
           context?.setSnackbarInfo({
-            message: 'Verifique sus credenciales o registrate para iniciar sesión.',
+            message:
+              'Verifique sus credenciales o registrate para iniciar sesión.',
             type: 'error',
             isVisible: true,
           });
         } else {
           setError(err.response?.data?.message || 'Error al iniciar sesión');
           context?.setSnackbarInfo({
-            message: 'Hubo un error al iniciar, intente de nuevo, si persiste, contacte al administrador.',
+            message:
+              'Hubo un error al iniciar, intente de nuevo, si persiste, contacte al administrador.',
             type: 'error',
             isVisible: true,
           });
