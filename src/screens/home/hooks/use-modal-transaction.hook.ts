@@ -1,9 +1,10 @@
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {Transaction} from '../../../common/interfaces/transaction.interface';
 import {CategorizedBudgetService} from '../../../services/categorized-budget.service';
 import {expenseCategoryTranslations} from '../../../common/enums/expense-category.enum';
 import {TransactionService} from '../../../services/transaction.service';
+import { GlobalContext } from '../../../context/global.context';
 
 interface TransactionForm {
   name: string;
@@ -36,6 +37,7 @@ export const useTransactionForm = (onClose: () => void) => {
 
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const context = useContext(GlobalContext);
   const [categories, setCategories] = useState<
     {label: string; value: number}[]
   >([]);
@@ -64,6 +66,7 @@ export const useTransactionForm = (onClose: () => void) => {
   }, []);
 
   const onSubmit = async (data: TransactionForm) => {
+    setIsLoading(true);
     console.log('Formulario enviado:', data);
     try {
       const response = await TransactionService.create({
@@ -73,10 +76,23 @@ export const useTransactionForm = (onClose: () => void) => {
         note: data.note.trim(),
         name: data.name.trim(),
       });
+      context?.setSnackbarInfo({
+        isVisible: true,
+        message: 'Transacción registrada correctamente',
+        type: 'success',
+      });
       console.log(response);
       onClose();
     } catch (error) {
       console.error('Error al crear transacción:', error);
+      context?.setSnackbarInfo({
+        isVisible: true,
+        message: 'Error al registrar la transacción, intente nuevamente',
+        type: 'error',
+      })
+    }
+    finally {
+      setIsLoading(false);
     }
   };
 

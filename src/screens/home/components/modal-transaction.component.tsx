@@ -5,7 +5,6 @@ import {
   TextInput,
   useTheme,
   RadioButton,
-  IconButton,
   Text,
   HelperText,
   Icon,
@@ -111,7 +110,7 @@ const TransactionModalForm = ({onClose}: {onClose: () => void}) => {
               <>
                 <TextInput
                   label="Cantidad*"
-                  value={value ? value.toString() : ''}
+                  value={value ? value : ''}
                   keyboardType="numeric"
                   mode="outlined"
                   style={styles.input}

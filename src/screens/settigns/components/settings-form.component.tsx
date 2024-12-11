@@ -10,6 +10,7 @@ import {
 import {Controller} from 'react-hook-form';
 import {ISettings} from '../../../common/interfaces/settings.interface';
 import useSettingsForm from '../hooks/use-settings-form.component';
+import Loader from '../../../utilities/components/loader.utility';
 
 const initialSettings: ISettings = {
   id: 0,
@@ -34,6 +35,7 @@ const SettingsForm = () => {
 
   return (
     <View>
+      <Loader visible={isLoading} />
       <Controller
         control={control}
         name="name"

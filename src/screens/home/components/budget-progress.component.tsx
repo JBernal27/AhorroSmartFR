@@ -8,7 +8,7 @@ import {IBudget} from '../../../common/interfaces/budget.interface';
 const screenWidth = Dimensions.get('window').width;
 
 export default function BudgetProgress({budget}: {budget: IBudget}) {
-  const theme = useTheme();
+  const theme = useTheme();  
 
   return (
     <View>
@@ -30,7 +30,7 @@ export default function BudgetProgress({budget}: {budget: IBudget}) {
         <ProgressChart
           data={{
             data: [
-              budget.percentage / 100 > 1 ? 1 : budget.percentage * 100,
+              budget.percentage / 100 > 1 ? 1 : budget.percentage / 100,
             ],
           }}
           width={screenWidth}
@@ -89,7 +89,7 @@ export default function BudgetProgress({budget}: {budget: IBudget}) {
               Gastos
             </Text>
             <Text variant="bodyLarge" style={{fontWeight: '400'}}>
-              $  {new Intl.NumberFormat('es-Es').format(budget.totalExpenses)} COP
+              ${new Intl.NumberFormat('es-Es').format(budget.totalExpenses)} COP
             </Text>
           </View>
           <View>
@@ -99,7 +99,7 @@ export default function BudgetProgress({budget}: {budget: IBudget}) {
               Presupuesto
             </Text>
             <Text variant="bodyLarge" style={{fontWeight: '400'}}>
-              $ {new Intl.NumberFormat('es-Es').format(budget.amount)} COP
+              ${new Intl.NumberFormat('es-Es').format(budget.amount)} COP
             </Text>
           </View>
         </View>

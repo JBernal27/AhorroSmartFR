@@ -19,5 +19,11 @@ export const styles = StyleSheet.create({
   },
   footerText: {
     textAlign: 'center',
-  }
+  },
+  emptyBudgetContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+    height: 100,
+  },
 });

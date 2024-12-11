@@ -1,73 +1,56 @@
-import {Divider, FAB, Text} from 'react-native-paper';
+import {Button, Divider, FAB, Text} from 'react-native-paper';
 import {useTheme} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import MainAppbar from './components/main-appbar.component';
-import {ScrollView, StyleSheet, View} from 'react-native';
-import {useContext, useEffect, useState} from 'react';
+import {ScrollView, View} from 'react-native';
 import TransactionModalForm from './components/modal-transaction.component';
 import BudgetModalForm from './components/modal-budget.component';
 import BudgetProgress from './components/budget-progress.component';
 import IncomeExpenseChart from './components/expenses-vs-incomes.component';
 import {styles} from './styles/home.styles';
-import {BudgetService} from '../../services/budget.service';
-import {GlobalContext} from '../../context/global.context';
-import {IBudget} from '../../common/interfaces/budget.interface';
 import Loader from '../../utilities/components/loader.utility';
-
-const initialBudget: IBudget = {
-  id: 0,
-  amount: 0,
-  date: new Date('2024-01-01T00:00:00.000Z'),
-  totalExpenses: 0,
-  totalIncomes: 0,
-  percentage: 0.0,
-  remaining: 0
-}
+import {useHome} from './hooks/use-home.hook';
 
 export const HomeScreen: React.FC = () => {
   const theme = useTheme();
-  const [isTransactionModalVisible, setIsTransactionModalVisible] =
-    useState(false);
-  const [isBudgetModalVisible, setIsBudgetModalVisible] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const context = useContext(GlobalContext);
-  const [budget, setBudget] = useState<IBudget>(initialBudget);
-  const [isLoading, setIsLoading] = useState(true);
+  const {
+    budget,
+    isLoading,
+    isTransactionModalVisible,
+    setIsTransactionModalVisible,
+    isBudgetModalVisible,
+    setIsBudgetModalVisible,
+    isOpen,
+    setIsOpen,
+  } = useHome();
 
-  useEffect(() => {
-    const fetchBudget = async () => {
-      setIsLoading(true);
-      try {
-        const budget = await BudgetService.get(new Date());
-        setBudget(budget);
-      } catch (error) {
-        context?.setSnackbarInfo({
-          message: 'Error al obtener el budget.',
-          type: 'error',
-          isVisible: true,
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-  
-    fetchBudget();
-  }, []);  
+  console.log('rerender');
 
   return (
-    <SafeAreaView style={[styles.safeArea, {backgroundColor: theme.colors.background}]}>
+    <SafeAreaView
+      style={[styles.safeArea, {backgroundColor: theme.colors.background}]}>
       {isLoading && <Loader visible />}
       <MainAppbar />
       <ScrollView
         style={[styles.scrollView, {backgroundColor: theme.colors.background}]}>
-        <BudgetProgress budget={budget} />
+        {budget ? (
+          <BudgetProgress budget={budget} />
+        ) : (
+          <View style={styles.emptyBudgetContainer}>
+            <Button
+              mode="contained"
+              onPress={() => setIsBudgetModalVisible(true)}>
+              Genera tu presupuesto para este mes
+            </Button>
+          </View>
+        )}
         <Divider style={styles.divider} />
-        <IncomeExpenseChart budget={budget} />
+        <IncomeExpenseChart />
       </ScrollView>
-        <Divider />
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>Jose Manuel Bernal - 2024©</Text>
-        </View>
+      <Divider />
+      <View style={styles.footer}>
+        <Text style={styles.footerText}>Jose Manuel Bernal - 2024©</Text>
+      </View>
       <FAB.Group
         open={isOpen}
         visible
