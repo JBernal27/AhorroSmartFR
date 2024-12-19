@@ -7,16 +7,24 @@ import {
   RadioButton,
   Text,
   HelperText,
-  Icon,
 } from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Dropdown} from 'react-native-element-dropdown';
 import Loader from '../../../utilities/components/loader.utility';
 import styles from '../styles/modal-transaction.styles';
 import {Controller} from 'react-hook-form';
-import { useTransactionForm } from '../hooks/use-modal-transaction.hook';
+import {useTransactionForm} from '../hooks/use-modal-transaction.hook';
+import {ITransaction} from '../../../common/interfaces/transaction.interface';
 
-const TransactionModalForm = ({onClose}: {onClose: () => void}) => {
+const TransactionModalForm = ({
+  onClose,
+  refreshHome,
+  transaction,
+}: {
+  onClose: () => void;
+  refreshHome: () => void;
+  transaction?: ITransaction;
+}) => {
   const theme = useTheme();
   const {
     control,
@@ -28,7 +36,7 @@ const TransactionModalForm = ({onClose}: {onClose: () => void}) => {
     isLoading,
     categories,
     onSubmit,
-  } = useTransactionForm(onClose);
+  } = useTransactionForm(onClose, refreshHome, transaction);
 
   const renderItem = (item: any) => (
     <View style={[styles.item, {backgroundColor: theme.colors.background}]}>
@@ -48,7 +56,7 @@ const TransactionModalForm = ({onClose}: {onClose: () => void}) => {
             {backgroundColor: theme.colors.background},
           ]}>
           <Text style={styles.title} variant="headlineMedium">
-            Crear Transacción
+            {transaction ? 'Editar Transacción' : 'Crear Transacción'}
           </Text>
 
           {/* Nombre */}
@@ -98,7 +106,7 @@ const TransactionModalForm = ({onClose}: {onClose: () => void}) => {
             )}
           />
 
-          {/* Cantidad */}
+          {/* Valor */}
           <Controller
             control={control}
             name="amount"
@@ -109,8 +117,8 @@ const TransactionModalForm = ({onClose}: {onClose: () => void}) => {
             render={({field: {onChange, value}}) => (
               <>
                 <TextInput
-                  label="Cantidad*"
-                  value={value ? value : ''}
+                  label="Valor*"
+                  value={value ? value.toString() : ''}
                   keyboardType="numeric"
                   mode="outlined"
                   style={styles.input}
@@ -120,27 +128,6 @@ const TransactionModalForm = ({onClose}: {onClose: () => void}) => {
                 />
                 {errors.amount && (
                   <HelperText type="error">{errors.amount.message}</HelperText>
-                )}
-              </>
-            )}
-          />
-
-          <Controller
-            control={control}
-            name="note"
-            render={({field: {onChange, value}}) => (
-              <>
-                <TextInput
-                  label="Descripción"
-                  value={value}
-                  onChangeText={onChange}
-                  mode="outlined"
-                  multiline
-                  numberOfLines={4}
-                  style={styles.textArea}
-                />
-                {errors.note && (
-                  <HelperText type="error">{errors.note.message}</HelperText>
                 )}
               </>
             )}
@@ -212,12 +199,12 @@ const TransactionModalForm = ({onClose}: {onClose: () => void}) => {
             rules={{required: 'Campo requerido'}}
             render={({field: {onChange, value}}) => (
               <>
-                  <Button
-                    mode="elevated"
-                    onPress={() => setShowDatePicker(true)}
-                    icon={'calendar'}>
-                    Fecha: {value.toDateString()}
-                  </Button>
+                <Button
+                  mode="elevated"
+                  onPress={() => setShowDatePicker(true)}
+                  icon={'calendar'}>
+                  Fecha: {value.toLocaleDateString('es-ES')}
+                </Button>
                 {errors.date && (
                   <HelperText type="error">{errors.date.message}</HelperText>
                 )}
@@ -226,7 +213,11 @@ const TransactionModalForm = ({onClose}: {onClose: () => void}) => {
                     value={value}
                     mode="date"
                     maximumDate={new Date()}
-                    minimumDate={new Date(new Date().getFullYear(), new Date().getMonth(), 1)}
+                    minimumDate={new Date(
+                      new Date().getFullYear(),
+                      new Date().getMonth(),
+                      1,
+                    )}
                     locale="es"
                     display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                     onChange={(_, selectedDate) => {
@@ -245,7 +236,7 @@ const TransactionModalForm = ({onClose}: {onClose: () => void}) => {
               mode="contained"
               onPress={handleSubmit(onSubmit)}
               style={styles.button}>
-              Añadir
+              {transaction ? 'Actualizar' : 'Añadir'}
             </Button>
             <Button
               mode="outlined"

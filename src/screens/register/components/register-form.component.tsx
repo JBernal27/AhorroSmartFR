@@ -1,17 +1,17 @@
-import React from 'react';
-import {View} from 'react-native';
+import React, { useState } from 'react';
+import { View } from 'react-native';
 import {
   TextInput,
   Button,
-  Title,
   Text,
   useTheme,
   HelperText,
+  IconButton,
 } from 'react-native-paper';
-import {useForm, Controller} from 'react-hook-form';
-import {RootStackParamList} from '../../../router/navigation';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {styles} from '../styles/register-form.styles';
+import { useForm, Controller } from 'react-hook-form';
+import { RootStackParamList } from '../../../router/navigation';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { styles } from '../styles/register-form.styles';
 import useRegister from '../hooks/use-register.hook';
 
 interface RegisterFormData {
@@ -27,37 +27,44 @@ const RegisterForm = () => {
   const {
     control,
     handleSubmit,
-    formState: {errors},
+    formState: { errors },
     watch,
   } = useForm<RegisterFormData>();
-  const {register, loading, error} = useRegister();
+  const { register, loading, error } = useRegister();
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const toggleShowPassword = () => setShowPassword(!showPassword);
+  const toggleShowConfirmPassword = () => setShowConfirmPassword(!showConfirmPassword);
+
+  const password = watch('password'); // Para comparar con confirmPassword
 
   const handleFormSubmit = async (data: RegisterFormData) => {
     const isRegisterSuccessful = await register(
       data.name,
       data.email,
-      data.password,
+      data.password
     );
     if (isRegisterSuccessful) {
       navigation.navigate('Home');
     }
   };
 
-  const password = watch('password'); // Para comparar con confirmPassword
-
   return (
     <View style={styles.container}>
       <Text
         variant="displaySmall"
-        style={[styles.title, {color: theme.colors.onPrimary}]}>
+        style={[styles.title, { color: theme.colors.onPrimary }]}
+      >
         Regístrate
       </Text>
 
       <Controller
         control={control}
         name="name"
-        rules={{required: 'El nombre es requerido'}}
-        render={({field: {onChange, onBlur, value}}) => (
+        rules={{ required: 'El nombre es requerido' }}
+        render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
             label="Nombre"
             mode="flat"
@@ -66,12 +73,11 @@ const RegisterForm = () => {
             onChangeText={onChange}
             value={value}
             error={!!errors.name}
+            left={<TextInput.Icon icon="account" />}
           />
         )}
       />
-      {errors.name && (
-        <HelperText type="error">{errors.name.message}</HelperText>
-      )}
+      {errors.name && <HelperText type="error">{errors.name.message}</HelperText>}
 
       <Controller
         control={control}
@@ -83,7 +89,7 @@ const RegisterForm = () => {
             message: 'Email inválido',
           },
         }}
-        render={({field: {onChange, onBlur, value}}) => (
+        render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
             label="Correo"
             mode="flat"
@@ -91,13 +97,12 @@ const RegisterForm = () => {
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
+            left={<TextInput.Icon icon="email" />}
             error={!!errors.email}
           />
         )}
       />
-      {errors.email && (
-        <HelperText type="error">{errors.email.message}</HelperText>
-      )}
+      {errors.email && <HelperText type="error">{errors.email.message}</HelperText>}
 
       <Controller
         control={control}
@@ -110,41 +115,52 @@ const RegisterForm = () => {
               'La contraseña debe tener al menos 6 caracteres, una mayúscula y un carácter especial',
           },
         }}
-        render={({field: {onChange, onBlur, value}}) => (
+        render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
             label="Contraseña"
             mode="flat"
             style={styles.input}
-            secureTextEntry
+            secureTextEntry={!showPassword}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
             error={!!errors.password}
+            left={<TextInput.Icon icon="lock" />}
+            right={
+              <TextInput.Icon
+                icon={showPassword ? 'eye-off' : 'eye'}
+                onPress={toggleShowPassword}
+              />
+            }
           />
         )}
       />
-      {errors.password && (
-        <HelperText type="error">{errors.password.message}</HelperText>
-      )}
+      {errors.password && <HelperText type="error">{errors.password.message}</HelperText>}
 
       <Controller
         control={control}
         name="confirmPassword"
         rules={{
           required: 'Debes confirmar la contraseña',
-          validate: value =>
-            value === password || 'Las contraseñas no coinciden',
+          validate: value => value === password || 'Las contraseñas no coinciden',
         }}
-        render={({field: {onChange, onBlur, value}}) => (
+        render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
             label="Confirmar Contraseña"
             mode="flat"
             style={styles.input}
-            secureTextEntry
+            secureTextEntry={!showConfirmPassword}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
             error={!!errors.confirmPassword}
+            left={<TextInput.Icon icon="lock-check" />}
+            right={
+              <TextInput.Icon
+                icon={showConfirmPassword ? 'eye-off' : 'eye'}
+                onPress={toggleShowConfirmPassword}
+              />
+            }
           />
         )}
       />
@@ -156,7 +172,8 @@ const RegisterForm = () => {
         mode="text"
         loading={loading}
         onPress={() => navigation.navigate('Login')}
-        disabled={loading}>
+        disabled={loading}
+      >
         ¿Ya tienes una cuenta? Inicia sesión aquí
       </Button>
 
@@ -165,7 +182,8 @@ const RegisterForm = () => {
         style={styles.button}
         loading={loading}
         onPress={handleSubmit(handleFormSubmit)}
-        disabled={loading}>
+        disabled={loading}
+      >
         Registrarme
       </Button>
 

@@ -16,7 +16,7 @@ const Snackbar = () => {
   const stylesByType = {
     error: {
       backgroundColor: theme.colors.error,
-      textColor: 'white',
+      textColor: theme.colors.onError,
       icon: 'error-outline',
     },
     warning: {
@@ -82,6 +82,7 @@ const Snackbar = () => {
           {backgroundColor: currentStyle.backgroundColor},
         ]}
         action={{
+          textColor: currentStyle.textColor,
           label: 'Cerrar',
           onPress: () =>
             context?.setSnackbarInfo({
@@ -93,7 +94,6 @@ const Snackbar = () => {
           style={{
             color: currentStyle.textColor,
           }}>
-          {/* <Icon name={currentStyle.icon} size={20} /> */}
           {message}
         </Text>
       </PaperSnackbar>

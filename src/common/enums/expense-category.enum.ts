@@ -26,3 +26,16 @@ export const expenseCategoryTranslations: Record<ExpenseCategory, string> = {
   [ExpenseCategory.OTHERS]: 'Otros',
 };
 
+export const expenseCategoryIcons: Record<ExpenseCategory, string> = {
+  [ExpenseCategory.HOUSING]: 'home-city',
+  [ExpenseCategory.FOOD]: 'food',
+  [ExpenseCategory.TRANSPORTATION]: 'train-car',
+  [ExpenseCategory.HEALTH]: 'heart-flash',
+  [ExpenseCategory.EDUCATION]: 'school',
+  [ExpenseCategory.ENTERTAINMENT]: 'popcorn',
+  [ExpenseCategory.CLOTHING]: 'tshirt-crew',
+  [ExpenseCategory.SAVINGS]: 'piggy-bank',
+  [ExpenseCategory.DEBTS]: 'currency-usd-off',
+  [ExpenseCategory.WORK]: 'briefcase',
+  [ExpenseCategory.OTHERS]: 'strategy',
+};

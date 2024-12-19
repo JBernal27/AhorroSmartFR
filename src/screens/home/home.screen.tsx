@@ -10,9 +10,14 @@ import IncomeExpenseChart from './components/expenses-vs-incomes.component';
 import {styles} from './styles/home.styles';
 import Loader from '../../utilities/components/loader.utility';
 import {useHome} from './hooks/use-home.hook';
+import CategoriesChart from './components/categories-chart.component';
+import { useRef, useState } from 'react';
 
 export const HomeScreen: React.FC = () => {
   const theme = useTheme();
+  // const cont = useRef(0); 
+  // cont.current++
+  // console.log('rerender', cont.current);
   const {
     budget,
     isLoading,
@@ -22,9 +27,9 @@ export const HomeScreen: React.FC = () => {
     setIsBudgetModalVisible,
     isOpen,
     setIsOpen,
+    refreshHome,
+    triggerRefresh,
   } = useHome();
-
-  console.log('rerender');
 
   return (
     <SafeAreaView
@@ -45,7 +50,8 @@ export const HomeScreen: React.FC = () => {
           </View>
         )}
         <Divider style={styles.divider} />
-        <IncomeExpenseChart />
+        <IncomeExpenseChart triggerRefresh={triggerRefresh} />
+        <CategoriesChart triggerRefresh={triggerRefresh} />
       </ScrollView>
       <Divider />
       <View style={styles.footer}>
@@ -76,10 +82,14 @@ export const HomeScreen: React.FC = () => {
       {isTransactionModalVisible && (
         <TransactionModalForm
           onClose={() => setIsTransactionModalVisible(false)}
+          refreshHome={refreshHome}
         />
       )}
       {isBudgetModalVisible && (
-        <BudgetModalForm onClose={() => setIsBudgetModalVisible(false)} />
+        <BudgetModalForm
+          onClose={() => setIsBudgetModalVisible(false)}
+          refreshHome={refreshHome}
+        />
       )}
     </SafeAreaView>
   );

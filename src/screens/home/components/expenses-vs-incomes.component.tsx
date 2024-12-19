@@ -1,180 +1,108 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {View, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
-import {LineChart} from 'react-native-chart-kit';
-import {Text, useTheme} from 'react-native-paper';
-import {IBudget} from '../../../common/interfaces/budget.interface';
-import {TransactionService} from '../../../services/transaction.service';
-import {getMonthName} from '../../../utilities/get-month-name.utility';
+import React from 'react';
+import {View, TouchableOpacity} from 'react-native';
+import { Text, useTheme} from 'react-native-paper';
+import {LineChart} from 'react-native-gifted-charts';
 import Loader from '../../../utilities/components/loader.utility';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../../../router/navigation';
+import useIncomeExpenseChart from '../hooks/expenses-vs-incomes.hook';
+import styles from '../styles/expenses-vs-incomes.styles';
 
-const screenWidth = Dimensions.get('window').width;
-
-const numberFormatter = new Intl.NumberFormat('es-ES', {
-  style: 'decimal',
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 2,
-});
-
-const IncomeExpenseChart = () => {
+const IncomeExpenseChart = ({triggerRefresh}: {triggerRefresh: boolean}) => {
   const theme = useTheme();
-  const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState({
-    labels: [] as string[],
-    datasets: [
-      {
-        data: [] as number[],
-        color: (opacity = 1) => theme.colors.primary,
-        strokeWidth: 2,
-      },
-      {
-        data: [] as number[],
-        color: (opacity = 1) => theme.colors.error,
-        strokeWidth: 2,
-      },
-    ],
-    legend: ['Ingresos', 'Gastos'],
-  });
-
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      setIsLoading(true);
-      try {
-        const response = await TransactionService.getAll();
-
-        const groupedData = response.reduce<{
-          labels: number[];
-          incomes: Record<number, number>;
-          expenses: Record<number, number>;
-        }>(
-          (acc, transaction) => {
-            const day = new Date(transaction.date).getUTCDate();
-
-            if (!acc.labels.includes(day)) {
-              acc.labels.push(day);
-            }
-
-            if (transaction.type === 'Income') {
-              acc.incomes[day] = (acc.incomes[day] || 0) + transaction.amount;
-            } else if (transaction.type === 'Expense') {
-              acc.expenses[day] = (acc.expenses[day] || 0) + transaction.amount;
-            }
-
-            return acc;
-          },
-          {labels: [], incomes: {}, expenses: {}},
-        );
-
-        groupedData.labels.sort((a, b) => a - b);
-
-        const incomeData = groupedData.labels.map(
-          day => groupedData.incomes[day] || 0,
-        );
-        const expenseData = groupedData.labels.map(
-          day => groupedData.expenses[day] || 0,
-        );
-
-        const totalIncomes = incomeData.reduce((sum, value) => sum + value, 0);
-        const totalExpenses = expenseData.reduce((sum, value) => sum + value, 0);
-
-        setData({
-          labels: groupedData.labels.map(String),
-          datasets: [
-            {
-              data: incomeData,
-              color: (opacity = 1) => theme.colors.primary,
-              strokeWidth: 2,
-            },
-            {
-              data: expenseData,
-              color: (opacity = 1) => theme.colors.error,
-              strokeWidth: 2,
-            },
-          ],
-          legend: [
-            `$${numberFormatter.format(totalIncomes)}`,
-            `$${numberFormatter.format(totalExpenses)}`,
-          ],
-        });
-      } catch (error) {
-        console.error('Error fetching transactions:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchTransactions();
-  }, []);
-
-  const formattedData = {
-    ...data,
-    datasets: data.datasets.map(dataset => ({
-      ...dataset,
-      data: dataset.data.map(value => Number(numberFormatter.format(value))),
-    })),
-  };
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const {isLoading, data} = useIncomeExpenseChart(triggerRefresh);
 
   return (
-    <TouchableOpacity
+    <View
       style={[
         styles.container,
         {boxShadow: `0px 0px 30px ${theme.colors.elevation.level5}`},
       ]}>
       <Loader visible={isLoading} />
-      <Text
-        variant="titleLarge"
-        style={[styles.title, {color: theme.colors.onBackground}]}>
-        Ingresos vs Gastos
-      </Text>
-      <Text
-        variant="bodySmall"
-        style={[{textAlign: 'left', color: theme.colors.onBackground}]}>
-        Aqui puedes ver tus movimientos de ingresos y gastos
-      </Text>
-      <LineChart
-        data={formattedData}
-        width={screenWidth - 32}
-        height={170}
-        withInnerLines={false}
-        withShadow={false}
-        withDots={true}
-        xAxisLabel={`${getMonthName(new Date()).substring(0, 3)} `}
-        yAxisLabel="$"
-        yAxisSuffix="k"
-        fromZero={true}
-        chartConfig={{
-          decimalPlaces: 0,
-          backgroundGradientFrom: theme.colors.background,
-          backgroundGradientTo: theme.colors.background,
-          color: (opacity = 1) => theme.colors.onBackground,
-          labelColor: (opacity = 1) => theme.colors.onBackground,
-          style: {
-            borderRadius: 16,
-          },
-        }}
+      <View
         style={{
-          marginVertical: 8,
-          borderRadius: 16,
-        }}
-        bezier
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          width: '100%',
+          alignItems: 'center',
+        }}>
+        <Text
+          variant="titleLarge"
+          style={[styles.title, {color: theme.colors.onBackground}]}>
+          Transacciones
+        </Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Transactions')}
+          style={[styles.button, {backgroundColor: theme.colors.primary}]}>
+          <Text
+            variant="bodyLarge"
+            style={{
+              color: theme.colors.onPrimary,
+              textAlign: 'center',
+              fontWeight: 'bold',
+            }}>
+            Ver todas
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: 15,
+        }}>
+        <View style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
+          <View
+            style={[
+              {width: 12, height: 12, borderRadius: 50},
+              {backgroundColor: theme.colors.primary},
+            ]}></View>
+          <Text variant="bodySmall" style={{color: theme.colors.onBackground}}>
+            {new Intl.NumberFormat('es-ES').format(data.totalIncome)} COP
+          </Text>
+        </View>
+        <View style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
+          <View
+            style={[
+              {width: 12, height: 12, borderRadius: 50},
+              {backgroundColor: theme.colors.error},
+            ]}></View>
+          <Text variant="bodySmall" style={{color: theme.colors.onBackground}}>
+            {new Intl.NumberFormat('es-ES').format(data.totalExpenses)} COP
+          </Text>
+        </View>
+      </View>
+      <LineChart
+        areaChart
+        curved
+        data={data.expenses}
+        data2={data.incomes}
+        width={250}
+        height={200}
+        spacing={35}
+        xAxisLabelTextStyle={{color: theme.colors.onBackground}}
+        yAxisTextStyle={{color: theme.colors.onBackground}}
+        yAxisTextNumberOfLines={1}
+        stepValue={data.maxStepValue}
+        yAxisLabelSuffix="K"
+        xAxisColor="lightgray"
+        yAxisColor="lightgray"
+        dataPointsColor2={theme.colors.primary}
+        dataPointsColor1={theme.colors.error}
+        dataPointsRadius={4}
+        hideRules={false}
+        rulesColor="lightgray"
+        color2={theme.colors.primary}
+        color1={theme.colors.error}
+        startFillColor2={theme.colors.primary}
+        startFillColor1={theme.colors.error}
+        startOpacity={0.7}
+        endOpacity={0.2}
       />
-    </TouchableOpacity>
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 16,
-    padding: 10,
-    borderRadius: 16,
-  },
-  title: {
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'left',
-    width: '90%',
-  },
-});
 
 export default IncomeExpenseChart;

@@ -10,11 +10,20 @@ import {
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Loader from '../../../utilities/components/loader.utility';
 import {Controller} from 'react-hook-form';
-import { useBudgetForm } from '../hooks/use-modal-budget.hook';
-import { Dropdown } from 'react-native-element-dropdown';
+import {useBudgetForm} from '../hooks/use-modal-budget.hook';
+import {Dropdown} from 'react-native-element-dropdown';
 import styles from '../styles/modal-budget.styles';
+import { getMonthName } from '../../../utilities/get-month-name.utility';
 
-const BudgetModalForm = ({onClose}: {onClose: () => void}) => {
+const BudgetModalForm = ({
+  onClose,
+  refreshHome,
+  budget,
+}: {
+  onClose: () => void;
+  refreshHome: () => void;
+  budget?: {id: number; category: string; amount: number; date: Date};
+}) => {
   const theme = useTheme();
   const {
     control,
@@ -26,7 +35,7 @@ const BudgetModalForm = ({onClose}: {onClose: () => void}) => {
     isLoading,
     categories,
     onSubmit,
-  } = useBudgetForm(onClose);
+  } = useBudgetForm(onClose, refreshHome, budget);
 
   const renderItem = (item: any) => (
     <View style={[styles.item, {backgroundColor: theme.colors.background}]}>
@@ -46,7 +55,7 @@ const BudgetModalForm = ({onClose}: {onClose: () => void}) => {
             {backgroundColor: theme.colors.background},
           ]}>
           <Text style={styles.title} variant="headlineMedium">
-            Crear Presupuesto
+            {budget ? 'Editar Presupuesto' : 'Crear Presupuesto'}
           </Text>
 
           {/* Cantidad */}
@@ -59,7 +68,7 @@ const BudgetModalForm = ({onClose}: {onClose: () => void}) => {
             render={({field: {onChange, value}}) => (
               <>
                 <TextInput
-                  label="Cantidad*"
+                  label="Valor*"
                   value={value ? value.toString() : ''}
                   keyboardType="numeric"
                   mode="outlined"
@@ -139,12 +148,12 @@ const BudgetModalForm = ({onClose}: {onClose: () => void}) => {
             rules={{required: 'Campo requerido'}}
             render={({field: {onChange, value}}) => (
               <>
-                  <Button
-                    mode="elevated"
-                    onPress={() => setShowDatePicker(true)}
-                    icon={'calendar'}>
-                    Mes y año: {value.toDateString()}
-                  </Button>
+                <Button
+                  mode="elevated"
+                  onPress={() => setShowDatePicker(true)}
+                  icon={'calendar'}>
+                    {getMonthName(value)} de {value.getFullYear()}
+                </Button>
                 {errors.date && (
                   <HelperText type="error">{errors.date.message}</HelperText>
                 )}
@@ -171,7 +180,7 @@ const BudgetModalForm = ({onClose}: {onClose: () => void}) => {
               mode="contained"
               onPress={handleSubmit(onSubmit)}
               style={styles.button}>
-              Añadir
+              {budget ? 'Actualizar' : 'Añadir'}
             </Button>
             <Button
               mode="outlined"

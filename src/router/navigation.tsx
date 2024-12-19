@@ -6,12 +6,16 @@ import LoginScreen from '../screens/login/login.screen';
 import RegisterScreen from '../screens/register/register.screen';
 import { GlobalContext } from '../context/global.context';
 import SettingsScreen from '../screens/settigns/settings.screen';
+import TransactionsScreen from '../screens/transactions/transactions.screen';
+import BudgetsScreen from '../screens/categories/categories.screen';
 
 export type RootStackParamList = {
     Home: undefined;
     Login: undefined;
     Register: undefined;
     Settings: undefined;
+    Transactions: undefined;
+    Budgets: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -22,15 +26,15 @@ export const Navigation: React.FC = () => {
 
     useEffect(() => {
         if (context?.settings) {
-            if (context.settings.isFirstTime) {
-                setInitialRouteName('Home');
-            } else {
+            // if (context.settings.isFirstTime) {
+            //     setInitialRouteName('Home');
+            // } else {
                 if (context.settings.token) {
                     setInitialRouteName('Home');
                 } else {
                     setInitialRouteName('Login');
                 }
-            }
+            // }
         }
     }, [context?.settings]);
 
@@ -45,6 +49,8 @@ export const Navigation: React.FC = () => {
                 <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
+                <Stack.Screen name="Transactions" component={TransactionsScreen} options={{ headerShown: false }} />
+                <Stack.Screen name="Budgets" component={BudgetsScreen} options={{ headerShown: false }} />
             </Stack.Navigator>
         </NavigationContainer>
     );

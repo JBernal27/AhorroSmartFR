@@ -1,0 +1,13 @@
+<layer-list xmlns:android= "http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#ffffff"/>
+        </shape>
+    </item>
+    <item android:gravity="center">
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/ahorro"
+            android:scaleType="fitCenter" />
+    </item>
+</layer-list>

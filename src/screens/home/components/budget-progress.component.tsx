@@ -8,7 +8,7 @@ import {IBudget} from '../../../common/interfaces/budget.interface';
 const screenWidth = Dimensions.get('window').width;
 
 export default function BudgetProgress({budget}: {budget: IBudget}) {
-  const theme = useTheme();  
+  const theme = useTheme();
 
   return (
     <View>
@@ -29,9 +29,7 @@ export default function BudgetProgress({budget}: {budget: IBudget}) {
         }}>
         <ProgressChart
           data={{
-            data: [
-              budget.percentage / 100 > 1 ? 1 : budget.percentage / 100,
-            ],
+            data: [budget.percentage / 100 > 1 ? 1 : budget.percentage / 100],
           }}
           width={screenWidth}
           height={180}
@@ -41,7 +39,13 @@ export default function BudgetProgress({budget}: {budget: IBudget}) {
             backgroundGradientFromOpacity: 0,
             backgroundGradientToOpacity: 0,
             decimalPlaces: 2,
-            color: (opacity = 1) => `rgba(0, 107 , 94, ${opacity})`,
+            color: (opacity = 1) => {
+              return budget.percentage / 100 < 0.75
+                      ? `rgba(0, 107 , 94, ${opacity})`
+                      : budget.percentage / 100 < 1
+                        ? `rgba(255, 243, 205, ${opacity})`
+                        : theme.colors.error;
+            },
             labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
             style: {
               borderRadius: 16,

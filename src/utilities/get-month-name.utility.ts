@@ -18,5 +18,5 @@ export function getMonthName(date: Date): string {
     throw new Error('El parámetro debe ser una instancia de Date.');
   }
 
-  return meses[date.getMonth()];
+  return meses[date.getUTCMonth()];
 }

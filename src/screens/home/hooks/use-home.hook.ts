@@ -2,6 +2,7 @@ import {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from '../../../context/global.context';
 import {IBudget} from '../../../common/interfaces/budget.interface';
 import {BudgetService} from '../../../services/budget.service';
+import { useIsFocused } from '@react-navigation/native';
 
 
 export const useHome = () => {
@@ -13,10 +14,18 @@ export const useHome = () => {
   const [budget, setBudget] = useState<IBudget>();
   const [isLoading, setIsLoading] = useState(true);
   const [triggerRefresh, setTriggerRefresh] = useState(false);
-
+  const isFocused = useIsFocused();
+  
   const refreshHome = async () => {
-    setTriggerRefresh(true);
+    console.log('Trigger refresh');
+    setTriggerRefresh(!triggerRefresh);
   };
+
+  useEffect(() => {
+    if (isFocused) {
+      refreshHome();
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     const fetchBudget = async () => {
@@ -36,7 +45,7 @@ export const useHome = () => {
     };
 
     fetchBudget();
-  }, []);
+  }, [triggerRefresh]);
 
   return {
     budget,
@@ -48,5 +57,6 @@ export const useHome = () => {
     isOpen,
     setIsOpen,
     refreshHome,
+    triggerRefresh,
   };
 };

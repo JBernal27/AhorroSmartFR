@@ -1,10 +1,10 @@
 import {useContext, useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
-import {Transaction} from '../../../common/interfaces/transaction.interface';
+import {ITransaction} from '../../../common/interfaces/transaction.interface';
 import {CategorizedBudgetService} from '../../../services/categorized-budget.service';
 import {expenseCategoryTranslations} from '../../../common/enums/expense-category.enum';
 import {TransactionService} from '../../../services/transaction.service';
-import { GlobalContext } from '../../../context/global.context';
+import {GlobalContext} from '../../../context/global.context';
 
 interface TransactionForm {
   name: string;
@@ -24,7 +24,11 @@ const initialFormValues: TransactionForm = {
   date: new Date(),
 };
 
-export const useTransactionForm = (onClose: () => void) => {
+export const useTransactionForm = (
+  onClose: () => void,
+  refreshHome: () => void,
+  transaction?: ITransaction, // Nueva propiedad opcional
+) => {
   const {
     control,
     handleSubmit,
@@ -32,7 +36,16 @@ export const useTransactionForm = (onClose: () => void) => {
     watch,
     formState: {errors},
   } = useForm<TransactionForm>({
-    defaultValues: initialFormValues,
+    defaultValues: transaction
+      ? {
+          name: transaction.name,
+          type: transaction.type,
+          amount: transaction.amount.toString(),
+          note: transaction.note,
+          categorizedBudgetId: transaction.categorizedBudget.id,
+          date: new Date(transaction.date),
+        }
+      : initialFormValues,
   });
 
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -41,8 +54,6 @@ export const useTransactionForm = (onClose: () => void) => {
   const [categories, setCategories] = useState<
     {label: string; value: number}[]
   >([]);
-
-  const categorizedBudget = watch('categorizedBudgetId');
 
   useEffect(() => {
     const getCategorizedBudget = async () => {
@@ -68,30 +79,41 @@ export const useTransactionForm = (onClose: () => void) => {
   const onSubmit = async (data: TransactionForm) => {
     setIsLoading(true);
     console.log('Formulario enviado:', data);
+
     try {
-      const response = await TransactionService.create({
-        ...data,
-        id: 0,
-        amount: parseInt(data.amount),
-        note: data.note.trim(),
-        name: data.name.trim(),
-      });
-      context?.setSnackbarInfo({
-        isVisible: true,
-        message: 'Transacción registrada correctamente',
-        type: 'success',
-      });
-      console.log(response);
+      if (transaction) {
+        await TransactionService.update(transaction.id, {
+          ...data,
+          amount: parseInt(data.amount),
+        });
+        context?.setSnackbarInfo({
+          isVisible: true,
+          message: 'Transacción actualizada correctamente',
+          type: 'success',
+        });
+      } else {
+        // Crear nueva transacción
+        await TransactionService.create({
+          ...data,
+          id: 0,
+          amount: parseInt(data.amount),
+        });
+        context?.setSnackbarInfo({
+          isVisible: true,
+          message: 'Transacción registrada correctamente',
+          type: 'success',
+        });
+      }
+      refreshHome();
       onClose();
     } catch (error) {
-      console.error('Error al crear transacción:', error);
+      console.error('Error al guardar transacción:', error);
       context?.setSnackbarInfo({
         isVisible: true,
-        message: 'Error al registrar la transacción, intente nuevamente',
+        message: 'Error al guardar la transacción, intente nuevamente',
         type: 'error',
-      })
-    }
-    finally {
+      });
+    } finally {
       setIsLoading(false);
     }
   };
@@ -106,7 +128,7 @@ export const useTransactionForm = (onClose: () => void) => {
     setShowDatePicker,
     isLoading,
     categories,
-    categorizedBudget,
     onSubmit,
   };
 };
+

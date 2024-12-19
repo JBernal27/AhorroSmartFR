@@ -1,11 +1,11 @@
 import { ExpenseCategory } from "../enums/expense-category.enum";
+import { IBudget } from "./budget.interface";
 
-export interface CategorizedBudget {
+export interface ICategorizedBudget {
   id: number;
   category :ExpenseCategory;
   amount: number;
-  date: Date;
   totalExpenses: number;
   totalIncomes: number;
-  budgetId: number;
+  budget: IBudget;
 }

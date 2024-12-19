@@ -8,16 +8,16 @@ const AxiosInstance = axios.create({
   withCredentials: true,
 });
 
-AxiosInstance.interceptors.request.use(
-  (config) => {
-    console.warn('REQUEST');
-    console.log(JSON.stringify(config, null, 2));
-    return config;
-  },
-  (error) => {
-    return Promise.reject(JSON.stringify(error, null, 2));
-  },
-);
+// AxiosInstance.interceptors.request.use(
+//   (config) => {
+//     console.warn('REQUEST');
+//     console.log(JSON.stringify(config, null, 2));
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(JSON.stringify(error, null, 2));
+//   },
+// );
 
 AxiosInstance.interceptors.response.use(
   (response) => {

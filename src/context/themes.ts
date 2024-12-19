@@ -100,3 +100,90 @@ export const themeColors = {
     onDarkContainer: 'rgb(206, 229, 255)',
   },
 };
+
+// export const themeColors = {
+//   light: {
+//     primary: 'rgb(34, 139, 34)', // Verde relacionado con dinero y estabilidad
+//     onPrimary: 'rgb(255, 255, 255)',
+//     primaryContainer: 'rgb(208, 240, 208)', // Verde claro para fondos destacados
+//     onPrimaryContainer: 'rgb(0, 50, 0)',
+//     secondary: 'rgb(0, 123, 167)', // Azul para confianza
+//     onSecondary: 'rgb(255, 255, 255)',
+//     secondaryContainer: 'rgb(198, 230, 250)', // Azul pastel para fondos
+//     onSecondaryContainer: 'rgb(0, 42, 58)',
+//     tertiary: 'rgb(242, 185, 44)', // Amarillo para destacar áreas clave
+//     onTertiary: 'rgb(0, 0, 0)',
+//     tertiaryContainer: 'rgb(255, 240, 184)',
+//     onTertiaryContainer: 'rgb(77, 57, 0)',
+//     error: 'rgb(179, 28, 28)',
+//     onError: 'rgb(255, 255, 255)',
+//     errorContainer: 'rgb(248, 213, 213)',
+//     onErrorContainer: 'rgb(79, 0, 0)',
+//     background: 'rgb(245, 250, 248)', // Fondo neutro pero cálido
+//     onBackground: 'rgb(34, 43, 40)',
+//     surface: 'rgb(245, 250, 248)',
+//     onSurface: 'rgb(34, 43, 40)',
+//     surfaceVariant: 'rgb(219, 229, 225)',
+//     onSurfaceVariant: 'rgb(67, 77, 74)',
+//     outline: 'rgb(112, 122, 119)',
+//     outlineVariant: 'rgb(190, 200, 197)',
+//     shadow: 'rgb(0, 0, 0)',
+//     scrim: 'rgb(0, 0, 0)',
+//     inverseSurface: 'rgb(46, 54, 51)',
+//     inverseOnSurface: 'rgb(234, 240, 238)',
+//     inversePrimary: 'rgb(65, 180, 65)',
+//     elevation: {
+//       level0: 'transparent',
+//       level1: 'rgb(237, 242, 239)',
+//       level2: 'rgb(227, 234, 230)',
+//       level3: 'rgb(216, 225, 221)',
+//       level4: 'rgb(206, 216, 212)',
+//       level5: 'rgb(195, 207, 202)',
+//     },
+//     surfaceDisabled: 'rgba(34, 43, 40, 0.12)',
+//     onSurfaceDisabled: 'rgba(34, 43, 40, 0.38)',
+//     backdrop: 'rgba(50, 65, 60, 0.4)',
+//   },
+//   dark: {
+//     primary: 'rgb(65, 180, 65)', // Verde vibrante en modo oscuro
+//     onPrimary: 'rgb(0, 55, 0)',
+//     primaryContainer: 'rgb(0, 90, 0)',
+//     onPrimaryContainer: 'rgb(208, 240, 208)',
+//     secondary: 'rgb(128, 208, 235)', // Azul suave para modo oscuro
+//     onSecondary: 'rgb(0, 54, 68)',
+//     secondaryContainer: 'rgb(0, 77, 90)',
+//     onSecondaryContainer: 'rgb(198, 230, 250)',
+//     tertiary: 'rgb(255, 204, 102)', // Amarillo en modo oscuro
+//     onTertiary: 'rgb(77, 43, 0)',
+//     tertiaryContainer: 'rgb(113, 61, 0)',
+//     onTertiaryContainer: 'rgb(255, 240, 184)',
+//     error: 'rgb(255, 171, 163)',
+//     onError: 'rgb(105, 0, 5)',
+//     errorContainer: 'rgb(142, 0, 5)',
+//     onErrorContainer: 'rgb(255, 171, 163)',
+//     background: 'rgb(34, 43, 40)',
+//     onBackground: 'rgb(219, 229, 225)',
+//     surface: 'rgb(34, 43, 40)',
+//     onSurface: 'rgb(219, 229, 225)',
+//     surfaceVariant: 'rgb(67, 77, 74)',
+//     onSurfaceVariant: 'rgb(190, 200, 197)',
+//     outline: 'rgb(140, 150, 146)',
+//     outlineVariant: 'rgb(67, 77, 74)',
+//     shadow: 'rgb(0, 0, 0)',
+//     scrim: 'rgb(0, 0, 0)',
+//     inverseSurface: 'rgb(219, 229, 225)',
+//     inverseOnSurface: 'rgb(46, 54, 51)',
+//     inversePrimary: 'rgb(34, 139, 34)',
+//     elevation: {
+//       level0: 'transparent',
+//       level1: 'rgb(39, 48, 46)',
+//       level2: 'rgb(42, 52, 49)',
+//       level3: 'rgb(45, 57, 53)',
+//       level4: 'rgb(46, 59, 54)',
+//       level5: 'rgb(48, 63, 57)',
+//     },
+//     surfaceDisabled: 'rgba(219, 229, 225, 0.12)',
+//     onSurfaceDisabled: 'rgba(219, 229, 225, 0.38)',
+//     backdrop: 'rgba(50, 65, 60, 0.4)',
+//   },
+// };
